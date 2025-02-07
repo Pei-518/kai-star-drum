@@ -24,6 +24,7 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/SimpleLightbox/2.1.0/simpleLightbox.min.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
+        <script type="module" src="./signup/registrationForm.js"></script>
     </head>
     <body id="page-top">
         <!-- Navigation-->
@@ -61,7 +62,10 @@
                     <div class="col-lg-8 text-center">
                         <h2 class="text-white mt-0">全國爵士鼓比賽</h2>
                         <hr class="divider divider-light" />
-                        <p class="text-white-75 mb-4">Start Bootstrap has everything you need to get your new website up and running in no time! Choose one of our open source, free to download, and easy to use themes! No strings attached!</p>
+                        <p class="text-white-75 mb-4">本活動目的為，給予熱愛音樂之人一個舞台演出經驗，趁機交流各年齡層的音樂造詣。<br>整個比賽內容為分級制度，除了K8組以外不可跨組進行比賽
+                            <br>為了防止跨組比賽，再度提醒比賽當天帶身分證或是健保卡(出示照片亦可)，如無法證明，參與比賽不予計分
+                            <br>如遲到者可以補賽，但是該組如果比賽結束，不予計分。
+                            <br>比賽時間為暑假，一律以還沒開學的年級為主</p>
                         <a class="btn btn-light btn-xl" href="#services">Get Started!</a>
                     </div>
                 </div>
@@ -70,35 +74,51 @@
         <!-- Services-->
         <section class="page-section bg-service" id="services">
             <div class="container px-4 px-lg-5">
-                <h2 class="text-center mt-0">At Your Service</h2>
-                <hr class="divider" />
+                <h2 class="text-center mt-0" style="margin: 3rem; color: #d0d0d0;">組別</h2>
                 <div class="row gx-4 gx-lg-5">
-                    <div class="col-lg-3 col-md-6 text-center">
-                        <div class="mt-5">
-                            <div class="mb-2"><i class="bi-gem fs-1 text-primary"></i></div>
-                            <h3 class="h4 mb-2">Sturdy Themes</h3>
-                            <p class="text-muted mb-0">Our themes are updated regularly to keep them bug free!</p>
+                    <!-- 第一組 -->
+                    <div class="row mb-4">
+                        <div class="col-lg-4 col-md-6 text-center p-4 custom-box"  style="margin-right: 0.5rem;">
+                            <h3 class="h4 mb-2 title-box">幼童K0組</h3>
+                            <p class="text-muted mb-0">為5歲以下{含5歲} 或大班以下{含大班}</p>
+                        </div>
+                        <div class="col-lg-4 col-md-6 text-center p-4 custom-box">
+                            <h3 class="h4 mb-2 title-box">國小Ｋ1組</h3>
+                            <p class="text-muted mb-0">為8歲以下{含8歲} 國小二年級以下{含國小二年級} 104/9/2~106/9/1</p>
+                        </div>
+                        <div class="col-lg-4 col-md-6 text-center p-4 custom-box">
+                            <h3 class="h4 mb-2 title-box">國小Ｋ2組</h3>
+                            <p class="text-muted mb-0">為10歲以下{含10歲} 國小四年級以下{含國小四年級}102/9/2~104/9/1</p>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-6 text-center">
-                        <div class="mt-5">
-                            <div class="mb-2"><i class="bi-laptop fs-1 text-primary"></i></div>
-                            <h3 class="h4 mb-2">Up to Date</h3>
-                            <p class="text-muted mb-0">All dependencies are kept current to keep things fresh.</p>
+                    <!-- 第二組 -->
+                    <div class="row mb-4">
+                        <div class="col-lg-4 col-md-6 text-center p-4 custom-box">
+                            <h3 class="h4 mb-2 title-box">國小Ｋ3組</h3>
+                            <p class="text-muted mb-0">為12歲以下{含12歲} 國小六年級以下{含國小六年級}100/9/2~102/9/1</p>
+                        </div>
+                        <div class="col-lg-4 col-md-6 text-center p-4 custom-box">
+                            <h3 class="h4 mb-2 title-box">國中Ｋ4組</h3>
+                            <p class="text-muted mb-0">為15歲以下{含15歲} 國中三年級以下{含國中三年級}97/9/2~100/9/1</p>
+                        </div>
+                        <div class="col-lg-4 col-md-6 text-center p-4 custom-box">
+                            <h3 class="h4 mb-2 title-box">高中Ｋ5組</h3>
+                            <p class="text-muted mb-0">為18歲以下{含18歲} 高中三年級以下{含高中三年級}94/9/2~97/9/1</p>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-6 text-center">
-                        <div class="mt-5">
-                            <div class="mb-2"><i class="bi-globe fs-1 text-primary"></i></div>
-                            <h3 class="h4 mb-2">Ready to Publish</h3>
-                            <p class="text-muted mb-0">You can use this design as is, or you can make changes!</p>
+                    <!-- 第三組 -->
+                    <div class="row mb-4">
+                        <div class="col-lg-4 col-md-6 text-center p-4 custom-box">
+                            <h3 class="h4 mb-2 title-box">大學Ｋ6組</h3>
+                            <p class="text-muted mb-0">為22歲以下{含22歲} 大學四年級以下{含大學四年級}90/9/2~94/9/1</p>
                         </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 text-center">
-                        <div class="mt-5">
-                            <div class="mb-2"><i class="bi-heart fs-1 text-primary"></i></div>
-                            <h3 class="h4 mb-2">Made with Love</h3>
-                            <p class="text-muted mb-0">Is it really open source if it's not made with love?</p>
+                        <div class="col-lg-4 col-md-6 text-center p-4 custom-box">
+                            <h3 class="h4 mb-2 title-box">社會Ｋ7組</h3>
+                            <p class="text-muted mb-0">為23歲以上{含23歲}90/9/1 以前出生</p>
+                        </div>
+                        <div class="col-lg-4 col-md-6 text-center p-4 custom-box">
+                            <h3 class="h4 mb-2 title-box">無限制K8組</h3>
+                            <p class="text-muted mb-0">適合程度已不在同年齡層，可以跨組比賽，難度為最高等級之組別</p>
                         </div>
                     </div>
                 </div>
@@ -189,29 +209,55 @@
                         <!-- To make this form functional, sign up at-->
                         <!-- https://startbootstrap.com/solution/contact-forms-->
                         <!-- to get an API token!-->
-                        <form id="contactForm" data-sb-form-api-token="API_TOKEN">
+                        <form id="FORM" data-sb-form-api-token="API_TOKEN">
                             <!-- Name input-->
                             <div class="form-floating mb-5">
-                                <input class="form-control" id="name" type="text" placeholder="Enter your name..." data-sb-validations="required" />
+                                <input class="form-control" id="NAME" type="text" placeholder="Enter your name..." data-sb-validations="required" />
                                 <label for="name">姓名</label>
                                 <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
                             </div>
+                            <!-- birth input-->
+                            <div class="form-floating mb-5">
+                                <input class="form-control" id="BIRTH" type="date" placeholder="Enter your birthdate..." data-sb-validations="required" />
+                                <label for="birth">民國出生年月日</label>
+                                <div class="invalid-feedback" data-sb-feedback="birth:required">A birthdate is required.</div>
+                            </div>
+                            <!-- address input-->
+                            <div class="form-floating mb-5">
+                                <input class="form-control" id="ADDRESS" type="text" placeholder="Enter your address..." data-sb-validations="required" />
+                                <label for="birth">聯絡地址</label>
+                                <div class="invalid-feedback" data-sb-feedback="birth:required">A address is required.</div>
+                            </div>
                             <!-- Email address input-->
                             <div class="form-floating mb-5">
-                                <input class="form-control" id="email" type="email" placeholder="name@example.com" data-sb-validations="required,email" />
-                                <label for="email">電子郵件</label>
+                                <input class="form-control" id="EMAIL" type="email" placeholder="name@example.com" data-sb-validations="required,email" />
+                                <label for="email">聯絡信箱</label>
                                 <div class="invalid-feedback" data-sb-feedback="email:required">An email is required.</div>
                                 <div class="invalid-feedback" data-sb-feedback="email:email">Email is not valid.</div>
+                                
+                            </div>
+                            <!-- teacher address input-->
+                            <div class="form-floating mb-5">
+                                <input class="form-control" id="TEACHER" type="text" placeholder="Enter your teacher..." data-sb-validations="required,email" />
+                                <label for="email">指導老師</label>
+                                <div class="invalid-feedback" data-sb-feedback="teacher:required">A teacher is required.</div>
                             </div>
                             <!-- Phone number input-->
                             <div class="form-floating mb-5">
-                                <input class="form-control" id="phone" type="tel" placeholder="(123) 456-7890" data-sb-validations="required" />
+                                <input class="form-control" id="PHONE" type="tel" placeholder="(123) 456-7890" data-sb-validations="required" />
                                 <label for="phone">電話</label>
                                 <div class="invalid-feedback" data-sb-feedback="phone:required">A phone number is required.</div>
                             </div>
+                           <!-- song number input-->
+                            <div class="form-floating mb-5">
+                                <input class="form-control" id="SONG" type="text" placeholder="作者-取名" data-sb-validations="required" pattern="^[\w\s]+-[\w\s]+$" />
+                                <label for="song">作者-曲名</label>
+                                <div class="invalid-feedback" data-sb-feedback="song:required">A song name is required.</div>
+                                <div class="invalid-feedback" data-sb-feedback="song:pattern">Please enter the name in the format "Author-Title".</div>
+                            </div>
                            <!-- Message input-->
                             <div class="form-floating mb-5">
-                                <select class="form-control" id="group" data-sb-validations="required">
+                                <select class="form-control" id="GROUP" data-sb-validations="required">
                                     <option value="" disabled selected>請選擇組別</option>
                                     <option value="junior">國小組</option>
                                     <option value="intermediate">國中組</option>
@@ -233,7 +279,13 @@
                             </div>
                             <!-- Submit Button-->
                             <div class="d-grid">
-                                <button class="btn btn-primary btn-xl" id="submitButton" type="submit">Submit</button>
+                                <input
+                                    class="btn btn-primary btn-xl"
+                                    id="submitButton"
+                                    type="submit"
+                                    data-callback="todo"
+                                    onclick="todo()"
+                                />
                             </div>
                         </form>
                     </div>
@@ -260,7 +312,6 @@
         <!-- * *                               SB Forms JS                               * *-->
         <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
         <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
-        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+        <!--<script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>-->
     </body>
 </html>
-
