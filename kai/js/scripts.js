@@ -56,4 +56,16 @@ window.addEventListener('DOMContentLoaded', event => {
         elements: '#portfolio a.portfolio-box'
     });
 
+    // 監聽滾動事件
+    window.addEventListener('scroll', function () {
+        const elements = document.querySelectorAll('.glass-box');
+        elements.forEach(element => {
+            const rect = element.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+                element.classList.add('visible');
+            } else {
+                element.classList.remove('visible');
+            }
+        });
+    });  
 });

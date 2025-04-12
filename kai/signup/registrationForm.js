@@ -105,8 +105,8 @@ class Candidate {
                 this.song +
                 "\n 報名組別：" +
                 this.group +
-                "\n 加報項目：" +
-                (this.additional ? "K8" : "無")
+                "\n 帳號後五碼：" +
+                this.payment
         );
         if (isConfirm) {
             await writeUserData(this);
