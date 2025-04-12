@@ -52,7 +52,7 @@ window.check_form = async function () {
         return;
     }
 
-    let CandidateID = Math.floor(Math.random() * 1000000);
+    const CandidateID = Date.now() + Math.floor(Math.random() * 1000);
     const candidate = new Candidate({
         id: CandidateID,
         name: form.NAME.value,
@@ -127,16 +127,16 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 // Your web app's Firebase configuration
- const firebaseConfig = {
+const firebaseConfig = {
     databaseURL:
-     "https://test-qwer-20b4c-default-rtdb.asia-southeast1.firebasedatabase.app",
-     apiKey: "AIzaSyDXK47kX3tY0OCHzg9aRLkmC6zqj-apf58",
+        "https://test-qwer-20b4c-default-rtdb.asia-southeast1.firebasedatabase.app",
+    apiKey: "AIzaSyDXK47kX3tY0OCHzg9aRLkmC6zqj-apf58",
     authDomain: "test-qwer-20b4c.firebaseapp.com",
     projectId: "test-qwer-20b4c",
-     storageBucket: "test-qwer-20b4c.firebasestorage.app",
-     messagingSenderId: "265751047124",
-     appId: "1:265751047124:web:82cd8a9e86b26878d44441",
- };
+    storageBucket: "test-qwer-20b4c.firebasestorage.app",
+    messagingSenderId: "265751047124",
+    appId: "1:265751047124:web:82cd8a9e86b26878d44441",
+};
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
