@@ -2978,21 +2978,22 @@ fieldset:disabled .btn {
 }
 
 .btn-primary {
-    --bs-btn-color: #fff;
-    --bs-btn-bg: #8a8887;
-    --bs-btn-border-color: #8a8887;
-    --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: #8a8887;
-    --bs-btn-hover-border-color: #8a8887;
-    --bs-btn-focus-shadow-rgb: 246, 122, 88;
-    --bs-btn-active-color: #fff;
-    --bs-btn-active-bg: #8a8887;
-    --bs-btn-active-border-color: #8a8887;
-    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-    --bs-btn-disabled-color: #fff;
-    --bs-btn-disabled-bg: #585857;
-    --bs-btn-disabled-border-color: #f4623a;
+    --bs-btn-color: #fff; /* 文字顏色設為白色 */
+    --bs-btn-bg: #0560ab; /* 背景顏色設為黑色 */
+    --bs-btn-border-color: #0560ab; /* 邊框顏色設為黑色 */
+    --bs-btn-hover-color: #fff; /* 滑鼠懸停時文字顏色保持白色 */
+    --bs-btn-hover-bg: #3a9dcb; /* 滑鼠懸停時背景顏色變為橘色 */
+    --bs-btn-hover-border-color: #3a9dcb; /* 滑鼠懸停時邊框顏色變為橘色 */
+    --bs-btn-focus-shadow-rgb: 246, 122, 88; /* 聚焦陰影顏色 */
+    --bs-btn-active-color: #fff; /* 按下時文字顏色保持白色 */
+    --bs-btn-active-bg: #3a9dcb; /* 按下時背景顏色變為橘色 */
+    --bs-btn-active-border-color: #3a9dcb; /* 按下時邊框顏色變為橘色 */
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125); /* 按下時陰影 */
+    --bs-btn-disabled-color: #fff; /* 禁用狀態文字顏色保持白色 */
+    --bs-btn-disabled-bg: #585857; /* 禁用狀態背景顏色設為深灰色 */
+    --bs-btn-disabled-border-color: #3a9dcb; /* 禁用狀態邊框顏色設為橘色 */
 }
+
 
 .btn-secondary {
     --bs-btn-color: #fff;
@@ -4355,7 +4356,7 @@ fieldset:disabled .btn {
 .card-body {
     flex: 1 1 auto;
     padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
-    color: var(--bs-card-color);
+    color: white;
 }
 
 .card-title {
@@ -4432,8 +4433,9 @@ fieldset:disabled .btn {
 
 .card-img,
 .card-img-top {
-    border-top-left-radius: var(--bs-card-inner-border-radius);
-    border-top-right-radius: var(--bs-card-inner-border-radius);
+    width: 100%; /* 保證圖片寬度占滿容器 */
+    height: 250px; /* 統一高度 */
+    object-fit: cover; /* 裁剪圖片以保持比例 */
 }
 
 .card-img,
@@ -4848,9 +4850,10 @@ fieldset:disabled .btn {
 }
 
 .alert-info {
-    --bs-alert-color: #087990;
-    --bs-alert-bg: #cff4fc;
-    --bs-alert-border-color: #b6effb;
+    --bs-alert-color: #032128;
+    --bs-alert-bg: #0f417d;
+    --bs-alert-border-color: #0f417d;
+    color: white;
 }
 .alert-info .alert-link {
     color: white;
@@ -8135,7 +8138,7 @@ fieldset:disabled .btn {
 }
 
 .py-5 {
-    padding-top: 3rem !important;
+    padding-top: 0rem !important;
     padding-bottom: 3rem !important;
 }
 
@@ -8443,7 +8446,8 @@ fieldset:disabled .btn {
 
 .text-muted {
     --bs-text-opacity: 1;
-    color: black !important;
+    color: white !important;
+    font-size: 14px;
 }
 
 .text-black-50 {
@@ -8475,10 +8479,6 @@ fieldset:disabled .btn {
 
 .text-opacity-100 {
     --bs-text-opacity: 1;
-}
-
-.bg-primary {
-    background-color: #505050 !important; /* 深灰色 */
 }
 
 .bg-service {
@@ -11219,7 +11219,26 @@ body {
 }
 
 .page-section {
-    padding: 8rem 0;
+    padding-top: 10rem;
+    padding-right: 0px;
+    padding-bottom: 15rem;
+    padding-left: 0px;
+    align-content: center;
+}
+
+.page-section {
+    padding-top: 10rem;
+    padding-bottom: 15rem;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.page-section2 {
+    padding-top: 1rem;
+    padding-right: 0px;
+    padding-bottom: 10rem;
+    padding-left: 0px;
+    align-content: center;
 }
 
 .text-white-75 {
@@ -11320,12 +11339,7 @@ hr.divider-light {
 header.masthead {
     padding-top: 10rem;
     padding-bottom: calc(10rem - 4.5rem);
-    background: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.6) 0%,
-            rgba(0, 0, 0, 0.6) 100%
-        ),
-        url("../assets/img/bg2.jpg");
+    background:url("../assets/img/bg2.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: scroll;
@@ -11454,16 +11468,79 @@ header.masthead .h1 {
 .title-box {
     display: inline-block;
     padding: 10px 10px;
-    border: 2px solid #5b5b5b; /* 深灰色邊框 */
     border-radius: 5px; /* 邊框圓角 */
     background-color: transparent; /* 淺灰色背景，與外部背景區別 */
-    color: #5b5b5b; /* 文字顏色 */
+    color: white; /* 文字顏色 */
+    font-size: 20px;
 }
 
 .custom-box {
-    background-color: #b7b7b7; /* 背景顏色 */
-    border-radius: 10px; /* 圓角邊框 */
-    padding: 20px; /* 內邊距 */
-    margin: 0 10px 0 10px;
-    width: 30%;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.3s ease-in-out;
+    color: white;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    min-height: 100px;
+}
+
+.custom-box:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(255,255,255,0.2);
+}
+
+.row-spacing {
+    margin-bottom: 2rem;
+}
+
+.glass-box {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 2rem;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: transform 0.6s ease, opacity 0.6s ease;
+    backdrop-filter: blur(10px); /* 增加玻璃模糊感 */
+}
+
+/* 當進入畫面時觸發 */
+.glass-box.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+ /* 自定義的卡片樣式 */
+.custom-card {
+    background-color: #003366;  /* 這裡換成你想要的顏色 */
+    border: none;  /* 如果需要，也可以設定邊框 */
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    height: 400px;
+    overflow: hidden;
+}
+
+/* 讓圖片的 carousel 內容填滿 */
+.carousel-inner img {
+    width: 100%;  /* 確保圖片的寬度填滿容器 */
+    height: 100%; /* 確保圖片的高度填滿容器 */
+    object-fit: cover; /* 確保圖片不會變形，並且保持比例填滿 */
+}
+
+/* 固定影片區塊大小，並保持16:9比例 */
+.embed-responsive {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 ratio */
+}
+
+.embed-responsive-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
