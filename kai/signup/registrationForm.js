@@ -127,18 +127,20 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 // Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    databaseURL:
-        "https://test-qwer-20b4c-default-rtdb.asia-southeast1.firebasedatabase.app",
-    apiKey: "AIzaSyDXK47kX3tY0OCHzg9aRLkmC6zqj-apf58",
-    authDomain: "test-qwer-20b4c.firebaseapp.com",
-    projectId: "test-qwer-20b4c",
-    storageBucket: "test-qwer-20b4c.firebasestorage.app",
-    messagingSenderId: "265751047124",
-    appId: "1:265751047124:web:82cd8a9e86b26878d44441",
-};
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+    apiKey: "AIzaSyCzje5-iL_hI2hlrJsS6aorsIs-ZPMqMpo",
+    authDomain: "kaidrum-8c957.firebaseapp.com",
+    databaseURL: "https://kaidrum-8c957-default-rtdb.firebaseio.com",
+    projectId: "kaidrum-8c957",
+    storageBucket: "kaidrum-8c957.firebasestorage.app",
+    messagingSenderId: "710792220659",
+    appId: "1:710792220659:web:523db5384fcb174b5a0c86",
+    measurementId: "G-QMKSGH6ZHZ"
+  };
+  
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
 
 async function writeUserData(candidateData) {
     const db = getDatabase();
