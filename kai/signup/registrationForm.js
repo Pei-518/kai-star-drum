@@ -152,7 +152,7 @@ async function writeUserData(candidateData) {
         TEACHER: candidateData.teacher,
         SONG: candidateData.song,
         GROUP: candidateData.group,
-        PAY: candidateData.payment,
+        PAYMENT: candidateData.payment,
         ADDITIONAL: candidateData.additional,
         TIMESTAMP: dt,
     })
