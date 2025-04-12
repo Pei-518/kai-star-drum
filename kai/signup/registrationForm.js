@@ -131,7 +131,7 @@ import {
 const firebaseConfig = {
     apiKey: "AIzaSyCzje5-iL_hI2hlrJsS6aorsIs-ZPMqMpo",
     authDomain: "kaidrum-8c957.firebaseapp.com",
-    databaseURL: "https://kaidrum-8c957-default-rtdb.firebaseio.com",
+    databaseURL: "https://kaidrum-8c957-default-rtdb.firebaseio.com/",
     projectId: "kaidrum-8c957",
     storageBucket: "kaidrum-8c957.firebasestorage.app",
     messagingSenderId: "710792220659",
@@ -139,8 +139,8 @@ const firebaseConfig = {
     measurementId: "G-QMKSGH6ZHZ"
   };
   
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
 async function writeUserData(candidateData) {
     const db = getDatabase();
