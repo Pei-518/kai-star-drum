@@ -118,6 +118,20 @@ class Candidate {
     }
 }
 
+const recaptchaResponse = grecaptcha.getResponse();
+if (!recaptchaResponse) {
+    alert("請完成驗證『我不是機器人』");
+    return;
+}
+
+if (emptyFields.length === 0) {
+    const recaptchaResponse = grecaptcha.getResponse();
+    if (!recaptchaResponse) {
+        alert("請完成驗證『我不是機器人』");
+        return;
+    }
+}
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
@@ -167,7 +181,7 @@ async function writeUserData(candidateData) {
         .then(function () {
             console.log("Data written successfully");
             alert(
-                "報名成功！\n請於繳費時間內繳納完畢並完成匯款登記，感謝您的配合！\n\n匯款帳號：XXXXXXXXXXXXXXXX"
+                "報名成功！\n請於繳費時間內繳納完畢並完成匯款登記，感謝您的配合！\n\n匯款帳號：(822)29954-1144-281"
             );
             window.location.href = "./index.html";
         })
