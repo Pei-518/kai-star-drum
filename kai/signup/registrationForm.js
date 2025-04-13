@@ -126,19 +126,25 @@ import {
     set,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "AIzaSyCzje5-iL_hI2hlrJsS6aorsIs-ZPMqMpo",
-    authDomain: "kaidrum-8c957.firebaseapp.com",
-    databaseURL: "https://kaidrum-8c957-default-rtdb.firebaseio.com/",
-    projectId: "kaidrum-8c957",
-    storageBucket: "kaidrum-8c957.firebasestorage.app",
-    messagingSenderId: "710792220659",
-    appId: "1:710792220659:web:523db5384fcb174b5a0c86",
-    measurementId: "G-QMKSGH6ZHZ"
-  };
-  
+  apiKey: "AIzaSyCzje5-iL_hI2hlrJsS6aorsIs-ZPMqMpo",
+  authDomain: "kaidrum-8c957.firebaseapp.com",
+  databaseURL: "https://kaidrum-8c957-default-rtdb.firebaseio.com",
+  projectId: "kaidrum-8c957",
+  storageBucket: "kaidrum-8c957.firebasestorage.app",
+  messagingSenderId: "710792220659",
+  appId: "1:710792220659:web:523db5384fcb174b5a0c86",
+  measurementId: "G-QMKSGH6ZHZ"
+};
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
