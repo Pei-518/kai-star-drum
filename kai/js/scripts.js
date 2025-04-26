@@ -69,3 +69,14 @@ window.addEventListener('DOMContentLoaded', event => {
         });
     });  
 });
+
+
+function adjustOffset() {
+    const navbar = document.querySelector('.navbar');
+    const main = document.body;
+    const height = navbar.offsetHeight;
+    main.style.paddingTop = `${height}px`;
+}
+
+window.addEventListener('load', adjustOffset);
+window.addEventListener('resize', adjustOffset);
