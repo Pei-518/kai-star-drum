@@ -121,14 +121,12 @@ class Candidate {
 const recaptchaResponse = grecaptcha.getResponse();
 if (!recaptchaResponse) {
     alert("請完成驗證『我不是機器人』");
-    return;
 }
 
 if (emptyFields.length === 0) {
     const recaptchaResponse = grecaptcha.getResponse();
     if (!recaptchaResponse) {
         alert("請完成驗證『我不是機器人』");
-        return;
     }
 }
 
