@@ -138,14 +138,6 @@ import {
     set,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-    getDatabase,
-    ref,
-    set,
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
 import {
     initializeAppCheck,
     ReCaptchaV3Provider,
