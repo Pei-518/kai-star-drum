@@ -118,18 +118,6 @@ class Candidate {
     }
 }
 
-const recaptchaResponse = grecaptcha.getResponse();
-if (!recaptchaResponse) {
-    alert("請完成驗證『我不是機器人』");
-}
-
-if (emptyFields.length === 0) {
-    const recaptchaResponse = grecaptcha.getResponse();
-    if (!recaptchaResponse) {
-        alert("請完成驗證『我不是機器人』");
-    }
-}
-
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
