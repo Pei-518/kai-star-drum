@@ -133,14 +133,13 @@ import {
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    piKey: "AIzaSyCzje5-iL_hI2hlrJsS6aorsIs-ZPMqMpo",
+    apiKey: "AIzaSyCzje5-iL_hI2hlrJsS6aorsIs-ZPMqMpo",
     authDomain: "kaidrum-8c957.firebaseapp.com",
     databaseURL: "https://kaidrum-8c957-default-rtdb.firebaseio.com",
     projectId: "kaidrum-8c957",
     storageBucket: "kaidrum-8c957.firebasestorage.app",
     messagingSenderId: "710792220659",
     appId: "1:710792220659:web:523db5384fcb174b5a0c86",
-    measurementId: "G-QMKSGH6ZHZ"
 };
 
 // Initialize Firebase
