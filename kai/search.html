@@ -1,6 +1,137 @@
-<div>
-    <input type="text" id="searchID" placeholder="輸入報名編號" />
-    <button onclick="searchCandidate()">查詢</button>
-</div>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>報名資料後台</title>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
 
-<div id="result"></div>
+    const firebaseConfig = {
+    apiKey: "AIzaSyCzje5-iL_hI2hlrJsS6aorsIs-ZPMqMpo",
+    authDomain: "kaidrum-8c957.firebaseapp.com",
+    databaseURL: "https://kaidrum-8c957-default-rtdb.firebaseio.com",
+    projectId: "kaidrum-8c957",
+    storageBucket: "kaidrum-8c957.firebasestorage.app",
+    messagingSenderId: "710792220659",
+    appId: "1:710792220659:web:523db5384fcb174b5a0c86",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const fields = {
+      NAME: "姓名",
+      BIRTH: "生日",
+      ADDRESS: "聯絡地址",
+      EMAIL: "聯絡信箱",
+      PHONE: "聯絡電話",
+      TEACHER: "指導老師",
+      SONG: "曲目",
+      GROUP: "報名組別",
+      PAYMENT: "帳號後五碼",
+    };
+
+    let tableData = [];
+
+    // 🔒 登入狀態監聽
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.getElementById("login-section").style.display = "none";
+        document.getElementById("admin-section").style.display = "block";
+        loadData(); // 載入報名資料
+      } else {
+        document.getElementById("login-section").style.display = "block";
+        document.getElementById("admin-section").style.display = "none";
+      }
+    });
+
+    // ⏩ 登入功能
+    window.login = function () {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          alert("登入成功！");
+        })
+        .catch((err) => {
+          alert("登入失敗：" + err.message);
+        });
+    };
+
+    // ⬇ 載入報名資料並建立表格
+    async function loadData() {
+      const snapshot = await getDocs(collection(db, "users"));
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const row = [];
+        for (let key in fields) {
+          row.push(data[key] || "");
+        }
+        tableData.push(row);
+
+        const tr = document.createElement("tr");
+        row.forEach((cell) => {
+          const td = document.createElement("td");
+          td.textContent = cell;
+          tr.appendChild(td);
+        });
+        document.getElementById("table-body").appendChild(tr);
+      });
+
+      $('#dataTable').DataTable();
+    }
+
+    // ⬇ 匯出 Excel
+    window.exportExcel = function () {
+      const wb = XLSX.utils.book_new();
+      const ws_data = [Object.values(fields), ...tableData];
+      const ws = XLSX.utils.aoa_to_sheet(ws_data);
+      XLSX.utils.book_append_sheet(wb, ws, "報名資料");
+      XLSX.writeFile(wb, "報名資料.xlsx");
+    };
+  </script>
+
+  <!-- 第三方套件 -->
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body style="font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px;">
+
+  <!-- 🔐 登入區塊 -->
+  <div id="login-section" style="max-width: 400px; margin: auto; display: none;">
+    <h2>管理員登入</h2>
+    <input id="email" type="email" placeholder="Email" style="width: 100%; padding: 8px; margin-bottom: 10px;"><br/>
+    <input id="password" type="password" placeholder="Password" style="width: 100%; padding: 8px;"><br/>
+    <button onclick="login()" style="margin-top: 10px;">登入</button>
+  </div>
+
+  <!-- 🛠 後台資料區 -->
+  <div id="admin-section" style="display: none;">
+    <h2>🔥 報名資料後台</h2>
+    <button onclick="exportExcel()">📤 匯出 Excel</button>
+    <table id="dataTable" class="display" style="width:100%; margin-top: 20px;">
+      <thead>
+        <tr>
+          <th>姓名</th>
+          <th>生日</th>
+          <th>聯絡地址</th>
+          <th>聯絡信箱</th>
+          <th>聯絡電話</th>
+          <th>指導老師</th>
+          <th>曲目</th>
+          <th>報名組別</th>
+          <th>帳號後五碼</th>
+        </tr>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+
+</body>
+</html>
