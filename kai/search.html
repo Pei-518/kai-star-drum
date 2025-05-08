@@ -65,26 +65,44 @@
 
     // ⬇ 載入報名資料並建立表格
     async function loadData() {
-      const snapshot = await getDocs(collection(db, "users"));
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        const row = [];
-        for (let key in fields) {
-          row.push(data[key] || "");
-        }
-        tableData.push(row);
+    try {
+    const snapshot = await getDocs(collection(db, "users"));
+    console.log("資料筆數：", snapshot.size);
 
-        const tr = document.createElement("tr");
-        row.forEach((cell) => {
-          const td = document.createElement("td");
-          td.textContent = cell;
-          tr.appendChild(td);
-        });
-        document.getElementById("table-body").appendChild(tr);
+    // 清空資料
+    tableData = [];
+    document.getElementById("table-body").innerHTML = "";
+
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      const row = [];
+
+      for (let key in fields) {
+        row.push(data[key] || "");
+      }
+
+      tableData.push(row);
+
+      const tr = document.createElement("tr");
+      row.forEach((cell) => {
+        const td = document.createElement("td");
+        td.textContent = cell;
+        tr.appendChild(td);
       });
+      document.getElementById("table-body").appendChild(tr);
+    });
 
+    // 初始化 DataTable（確保只執行一次）
+    if (!$.fn.DataTable.isDataTable('#dataTable')) {
       $('#dataTable').DataTable();
     }
+
+    } catch (error) {
+        console.error("讀取 Firestore 發生錯誤：", error);
+        alert("讀取報名資料時發生錯誤：" + error.message);
+    }
+    }
+
 
     // ⬇ 匯出 Excel
     window.exportExcel = function () {
