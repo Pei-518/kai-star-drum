@@ -1,6 +1,6 @@
 window.todo = async function () {
+    if (event) event.preventDefault();
     console.log("SUBMITED");
-    // alert("SUBMITED");
     check_form();
 };
 
