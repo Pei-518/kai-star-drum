@@ -25,35 +25,54 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/SimpleLightbox/2.1.0/simpleLightbox.min.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
-        <script type="module" src="./signup/registrationForm.js">
-            const REGISTRATION_CLOSED = true;
+        <script type="module" src="./signup/registrationForm.js"></script>
+        <script>
+            const REGISTRATION_CLOSED = true; // 改成 false 可重新開放
+
             document.addEventListener('DOMContentLoaded', () => {
-            if (!REGISTRATION_CLOSED) return;
+                if (!REGISTRATION_CLOSED) return;
 
-            // 1) 導覽列「報名」→ 顯示已截止並停用
-            document.querySelectorAll('a.nav-link[href="#contact"]').forEach(a => {
+                // 1) 導覽列文字+停用
+                document.querySelectorAll('a.nav-link[href="#contact"]').forEach(a => {
                 a.textContent = '報名（已截止）';
-                a.classList.add('disabled');
-            });
+                a.classList.add('disabled'); // 你已在 <style> 定義 pointer-events: none; opacity
+                a.setAttribute('aria-disabled', 'true');
+                a.setAttribute('tabindex', '-1');
+                });
 
-            // 2) 在報名表單上方顯示公告，並停用所有欄位
-            const form = document.getElementById('FORM');
-            if (form) {
+                // 2) 標題改字
+                const h = document.querySelector('#contact h2');
+                if (h) h.textContent = '報名（已截止）';
+
+                // 3) 表單上方插入公告 + 停用全部欄位與送出
+                const form = document.getElementById('FORM');
+                if (form) {
                 const note = document.createElement('div');
                 note.className = 'alert alert-danger text-center mb-4';
                 note.innerHTML = '📌 本屆報名已截止，僅開放成績查詢。';
                 form.parentElement.insertBefore(note, form);
 
-                form.querySelectorAll('input, select, textarea, button, [type="submit"]').forEach(el => {
-                el.disabled = true;
-                });
-            }
+                // 停用輸入與按鈕
+                form.querySelectorAll('input, select, textarea, button').forEach(el => { el.disabled = true; });
 
-            // 3) 「報名」區塊標題也加註
-            const h = document.querySelector('#contact h2');
-            if (h) h.textContent = '報名（已截止）';
+                // 額外保險：攔截 submit（就算有人用 DevTools 移除 disabled 也送不出去）
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    alert('本屆報名已截止，表單已停用。');
+                    return false;
+                });
+
+                // 4) reCAPTCHA 與送出鈕也處理掉
+                const submitBtn = document.getElementById('submitButton');
+                if (submitBtn) submitBtn.disabled = true;
+
+                const grecaptchaBox = document.querySelector('.g-recaptcha');
+                if (grecaptchaBox) grecaptchaBox.style.display = 'none';
+                }
             });
         </script>
+
     </head>
     <body id="page-top" style="background-image: url('./assets/img/bg.jpg'); background-size: cover; background-repeat: no-repeat; background-attachment: fixed;">
         <!-- Navigation-->
