@@ -12,6 +12,7 @@
             h1 {
                 font-family: 'LXGW WenKai Mono TC', serif;
             }
+            .nav-link.disabled { pointer-events: none; opacity: .6; }
         </style>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/kai.ico" />
@@ -24,7 +25,35 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/SimpleLightbox/2.1.0/simpleLightbox.min.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
-        <script type="module" src="./signup/registrationForm.js"></script>
+        <script type="module" src="./signup/registrationForm.js">
+            const REGISTRATION_CLOSED = true;
+            document.addEventListener('DOMContentLoaded', () => {
+            if (!REGISTRATION_CLOSED) return;
+
+            // 1) 導覽列「報名」→ 顯示已截止並停用
+            document.querySelectorAll('a.nav-link[href="#contact"]').forEach(a => {
+                a.textContent = '報名（已截止）';
+                a.classList.add('disabled');
+            });
+
+            // 2) 在報名表單上方顯示公告，並停用所有欄位
+            const form = document.getElementById('FORM');
+            if (form) {
+                const note = document.createElement('div');
+                note.className = 'alert alert-danger text-center mb-4';
+                note.innerHTML = '📌 本屆報名已截止，僅開放成績查詢。';
+                form.parentElement.insertBefore(note, form);
+
+                form.querySelectorAll('input, select, textarea, button, [type="submit"]').forEach(el => {
+                el.disabled = true;
+                });
+            }
+
+            // 3) 「報名」區塊標題也加註
+            const h = document.querySelector('#contact h2');
+            if (h) h.textContent = '報名（已截止）';
+            });
+        </script>
     </head>
     <body id="page-top" style="background-image: url('./assets/img/bg.jpg'); background-size: cover; background-repeat: no-repeat; background-attachment: fixed;">
         <!-- Navigation-->
@@ -43,6 +72,7 @@
                         <li class="nav-item"><a class="nav-link" href="#winner">歷屆得獎者</a></li>
                         <li class="nav-item"><a class="nav-link" href="#step">報名步驟</a></li>
                         <li class="nav-item"><a class="nav-link" href="#contact">報名</a></li>
+                        <li class="nav-item"><a class="nav-link" href="search.html">成績查詢</a></li>
                         <li class="nav-item"><a class="nav-link" href="#contactMe">聯絡我們</a></li>
                         <li class="nav-item"><a class="nav-link" href="#support">贊助廠商</a></li>
                     </ul>
