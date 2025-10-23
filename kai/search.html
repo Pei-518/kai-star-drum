@@ -88,10 +88,11 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzI2YypnAezcIK3sPb8q_R4zBeyqk2TzHkuUgQYaNyChvtFUd8D54KqZYIuPpT3bwAR/exec";
+    // 你的 Apps Script Web App URL
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyq2bxSn8QtViO_zI02gvorzAoGB3AUq23ph6Bo_ALotdz4rjIJHEPuJKA0vze3TF8R/exec";
 
-    const COL = { name:"姓名", group:"組別", score:"成績" };
-    const rankingConfig = { key: COL.score, isAscending:false, useCompetitionRank:true };
+    // 欄位對應：要包含「名次」
+    const COL = { name:"姓名", group:"組別", score:"成績", rank:"名次" };
 
     const $sheet = document.getElementById('sheetSelect');
     const $tbody = document.querySelector('#tbl tbody');
@@ -108,59 +109,70 @@
     const showEmptyBelow = on => $emptyBelow.classList.toggle('show', !!on);
     const norm = s => String(s || '').trim();
 
-    function computeRanks(items, {key, isAscending, useCompetitionRank}, groupKey){
-      const val = v => { const n = toNumber(v); return Number.isFinite(n) ? n : NaN; };
-      const sorted = [...items].sort((a,b)=>{
-        const av=val(a[key]), bv=val(b[key]);
-        if (Number.isNaN(av) && Number.isNaN(bv)) return 0;
-        if (Number.isNaN(av)) return 1;
-        if (Number.isNaN(bv)) return -1;
-        return isAscending ? (av-bv) : (bv-av);
-      });
-      if (groupKey){
-        const map = new Map();
-        sorted.forEach(it=>{
-          const g = norm(it[groupKey]);
-          if(!map.has(g)) map.set(g,[]);
-          map.get(g).push(it);
-        });
-        map.forEach(arr=>{
-          let last, lr=0, d=0;
-          arr.forEach((it,idx)=>{
-            const cur = val(it[key]);
-            d  = idx===0 ? 1 : d + (cur===last ? 0 : 1);
-            const rc = idx===0 ? 1 : (cur===last ? lr : idx+1);
-            it.__rank_group = useCompetitionRank ? rc : d;
-            last = cur; lr = it.__rank_group;
-          });
-        });
+    // 名次顯示：1~3 有獎牌，其餘只有數字（不加獎牌）
+    function rankBadge(rank){
+      const n = Number(rank);
+      if (!n) return '';
+      if (n === 1 || n === 2 || n === 3){
+        const medal = n===1?'🥇':n===2?'🥈':'🥉';
+        const cls = n===1?'rank-1':n===2?'rank-2':'rank-3';
+        return `<span class="badge ${cls}">${medal}<span>${n}</span></span>`;
       }
-      return sorted;
+      // 第4名以後：無獎牌
+      return `<span class="badge"><span>${n}</span></span>`;
     }
 
-    function badge(rank){
-      const medal = rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':'';
-      const cls = rank===1?'rank-1':rank===2?'rank-2':rank===3?'rank-3':'';
-      return `<span class="badge ${cls}">${medal}<span>${rank}</span></span>`;
-    }
-
+    // 渲染表格；特例：尚未公布
     function render(list){
-      $tbody.innerHTML = list.map(it => `
-        <tr>
-          <td class="rank">${it.__rank_group ? badge(Number(it.__rank_group)) : ''}</td>
-          <td>${it[COL.name] ?? ''}</td>
-          <td class="group">${it[COL.group] ?? ''}</td>
-          <td class="score"><b>${it[COL.score] ?? ''}</b></td>
-        </tr>
-      `).join('');
+      $tbody.innerHTML = list.map(it => {
+        const isPending = String(it[COL.name]) === '尚未公布';
+        if (isPending){
+          return `
+            <tr>
+              <td class="rank"></td>
+              <td colspan="3" style="text-align:center;color:#0b3aa7;font-weight:600;">尚未公布</td>
+            </tr>
+          `;
+        }
+        const rankCell = rankBadge(it[COL.rank]);
+        const score = (it[COL.score] ?? '') === '' ? '' : `<b>${it[COL.score]}</b>`;
+        return `
+          <tr>
+            <td class="rank">${rankCell}</td>
+            <td>${it[COL.name] ?? ''}</td>
+            <td class="group">${it[COL.group] ?? ''}</td>
+            <td class="score">${score}</td>
+          </tr>
+        `;
+      }).join('');
     }
 
     function apply(){
       const sel = $sheet.value;
-      if (!sel){ render([]); $emptyBelow.textContent='請選擇組別'; showEmptyBelow(true); return; }
-      if (dataset.length === 0){ render([]); $emptyBelow.textContent=`${sel} 尚未公布`; showEmptyBelow(true); return; }
-      const ranked = computeRanks(dataset, rankingConfig, COL.group);
-      render(ranked.filter(it => Number(it.__rank_group) <= 3));
+
+      if (!sel){
+        render([]);
+        $emptyBelow.textContent = '請選擇組別';
+        showEmptyBelow(true);
+        return;
+      }
+
+      if (dataset.length === 0){
+        render([]);
+        $emptyBelow.textContent = `${sel} 尚未公布`;
+        showEmptyBelow(true);
+        return;
+      }
+
+      // 若只有一列且姓名=尚未公布，直接顯示
+      if (dataset.length === 1 && String(dataset[0][COL.name]) === '尚未公布'){
+        render(dataset);
+        showEmptyBelow(false);
+        return;
+      }
+
+      // 後端已依規則（前3或前8）篩好，直接顯示
+      render(dataset);
       showEmptyBelow(false);
     }
 
@@ -170,21 +182,29 @@
         const url = `${SCRIPT_URL}?all=1&ts=${Date.now()}`;
         const res = await fetch(url, {cache:'no-store'});
         const data = await res.json();
+
         const rows = Array.isArray(data) ? data : (data.rows || []);
         allData = rows.map(r => ({
           [COL.name]:  r[COL.name],
           [COL.group]: norm(r[COL.group] ?? ''),
-          [COL.score]: toNumber(r[COL.score])
+          [COL.score]: toNumber(r[COL.score]),
+          [COL.rank]:  r[COL.rank]
         }));
+
+        // 組別清單（優先用 meta.sheets，其次從資料取）
         const names = (data.meta && Array.isArray(data.meta.sheets))
           ? data.meta.sheets.map(s => s.name)
           : Array.from(new Set(allData.map(x => x[COL.group]).filter(Boolean))).sort();
+
+        // 重建下拉
         for (let i=$sheet.options.length-1; i>=1; i--) $sheet.remove(i);
         names.forEach(n=>{
           const opt = document.createElement('option');
           opt.value = n; opt.textContent = n; $sheet.appendChild(opt);
         });
-        dataset = []; showEmptyBelow(true);
+
+        dataset = [];
+        showEmptyBelow(true);
       }catch(err){
         alert('讀取資料失敗：' + (err.message||err));
       }finally{
@@ -192,7 +212,7 @@
       }
     }
 
-    // ★重新載入當前組別（即時刷新該組資料）
+    // 重新載入目前選擇的組別（即時）
     async function reloadCurrentGroup(){
       const sel = $sheet.value;
       if (!sel){ alert("請先選擇組別再重新載入"); return; }
@@ -201,12 +221,15 @@
         const url = `${SCRIPT_URL}?sheet=${encodeURIComponent(sel)}&ts=${Date.now()}`;
         const res = await fetch(url, {cache:'no-store'});
         const data = await res.json();
+
         const rows = Array.isArray(data) ? data : (data.rows || []);
         dataset = rows.map(r => ({
           [COL.name]:  r[COL.name],
           [COL.group]: norm(r[COL.group] ?? ''),
-          [COL.score]: toNumber(r[COL.score])
+          [COL.score]: toNumber(r[COL.score]),
+          [COL.rank]:  r[COL.rank]
         }));
+
         apply();
       }catch(err){
         alert("重新載入失敗：" + (err.message || err));
