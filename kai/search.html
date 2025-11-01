@@ -26,41 +26,74 @@
     select:focus{outline:2px solid var(--primary-weak);border-color:var(--primary)}
     .btn{background:#eff6ff;color:#0b3aa7;border:1px solid #c7d2fe;cursor:pointer}
 
-    .table-wrap{margin-top:4px;border:1px solid var(--border);border-radius:12px;overflow:auto;background:#fff;box-shadow:var(--shadow);position:relative}
-    table{width:100%;border-collapse:collapse;min-width:560px;table-layout:fixed}
-    thead th{position:sticky;top:0;z-index:1;background:var(--thead);color:#0b3aa7;font-weight:700;border-bottom:1px solid #c7d2fe;padding:10px 12px;text-align:left}
+    .table-wrap{
+      margin-top:4px;border:1px solid var(--border);border-radius:12px;
+      overflow:auto;background:#fff;box-shadow:var(--shadow);position:relative;
+      min-height:160px;
+    }
+    table{width:100%;border-collapse:collapse;min-width:480px;table-layout:fixed}
+    thead th{
+      position:sticky;top:0;z-index:2;
+      background:var(--thead);color:#0b3aa7;font-weight:700;
+      border-bottom:1px solid #c7d2fe;padding:10px 12px;text-align:left
+    }
     tbody td{border-bottom:1px solid var(--border);padding:10px 12px;vertical-align:middle;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     tbody tr:nth-child(odd){background:#f8fbff}
     tbody tr:hover{background:#eef5ff}
-    th.rank, td.rank{width:140px}
+    th.rank, td.rank{width:120px}
     th.group, td.group{width:160px}
-    th.score, td.score{width:120px}
 
     .badge{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:999px;font-weight:700;font-size:14px;background:#e0e7ff;color:#1e3a8a;border:1px solid #c7d2fe}
     .rank-1{background:#ffeab5;color:#8a4b00;border-color:#ffd58a}
     .rank-2{background:#e2e8f0;color:#334155;border-color:#cbd5e1}
     .rank-3{background:#fde68a;color:#7c2d12;border-color:#fcd34d}
 
-    .loading{position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+    /* 內層 loading（表格用） */
+    .loading{
+      position:absolute;inset:0;display:none;align-items:center;justify-content:center;
       background:linear-gradient(180deg, rgba(239,246,255,.85), rgba(239,246,255,.6));
-      backdrop-filter:saturate(180%) blur(2px);border-radius:12px}
+      backdrop-filter:saturate(180%) blur(2px);border-radius:12px;
+      z-index:3;
+    }
     .loading.show{display:flex}
     .spinner{width:42px;height:42px;border-radius:50%;border:4px solid #c7d2fe;border-top-color:#1d4ed8;animation:spin .9s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
 
     .empty-below{display:none;text-align:center;color:#0b3aa7;margin-top:14px;padding:14px 12px;background:#f5f9ff;border:1px dashed #c7d2fe;border-radius:12px}
     .empty-below.show{display:block}
+    td.pending{ text-align:center;color:#0b3aa7;font-weight:600; }
+
+    /* 全螢幕啟動 loading（進站立刻可見） */
+    .boot-loading{
+      position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+      background:rgba(240,245,255,.95);z-index:9999;
+    }
+    .boot-loading.show{display:flex}
+    .boot-box{
+      display:flex;flex-direction:column;align-items:center;gap:14px;
+      padding:18px 22px;border-radius:14px;background:#fff;border:1px solid var(--border);box-shadow:var(--shadow);
+      color:#0b3aa7;font-weight:600
+    }
+    .boot-spinner{width:46px;height:46px;border-radius:50%;border:4px solid #c7d2fe;border-top-color:#1d4ed8;animation:spin .9s linear infinite}
   </style>
 </head>
 <body>
-  <div class="container">
+  <!-- 全螢幕啟動載入層 -->
+  <div id="bootLoading" class="boot-loading show" aria-live="polite" aria-busy="true">
+    <div class="boot-box">
+      <div class="boot-spinner"></div>
+      <div>正在載入成績…</div>
+    </div>
+  </div>
+
+  <div class="container" aria-busy="false">
     <h1>比賽成績查詢</h1>
 
     <div class="card">
       <header class="controls">
         <div>
           <label for="sheetSelect">分頁（組別）</label>
-          <select id="sheetSelect">
+          <select id="sheetSelect" aria-label="選擇組別">
             <option value="">選擇組別</option>
           </select>
         </div>
@@ -75,7 +108,6 @@
               <th class="rank">組內名次</th>
               <th>姓名</th>
               <th class="group">組別</th>
-              <th class="score">成績</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -84,15 +116,17 @@
       </div>
 
       <div id="emptyBelow" class="empty-below">請選擇組別</div>
+      <div id="perf" style="margin-top:8px;color:#64748b;font-size:12px;"></div>
     </div>
   </div>
 
   <script>
-    // Apps Script Web App URL
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-RVQRiNSxBHxEBPmYEIqbqUVvf2Rd6Tj0fReTj16iifwvahx1DzCwyCKo8h4mkzCX/exec";
+    // ★ 換成你的 Apps Script Web App 連結
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxP_yXeH9IRUOgi40tsNzW5Rzd70KAfGifg5dx3R0gYJuM8YLTieoq4zlkyrNCF3wEp/exec";
+    // ★ 換成你的 Google 試算表 ID（CSV 備援用）
+    const SHEET_ID  = "16djx-tUT59GxMjziCHYcBmON1JdOAkKERb1e2BqO9uY";
 
-    // 欄位對應（含名次）
-    const COL = { name:"姓名", group:"組別", score:"成績", rank:"名次" };
+    const COL = { name:"姓名", group:"組別", ranking:"名次" };
 
     const $sheet = document.getElementById('sheetSelect');
     const $tbody = document.querySelector('#tbl tbody');
@@ -100,15 +134,36 @@
     const $btnRel = document.getElementById('btnReload');
     const $loading = document.getElementById('loading');
     const $emptyBelow = document.getElementById('emptyBelow');
+    const $boot = document.getElementById('bootLoading');
+    const $perf = document.getElementById('perf');
 
-    let allData = [];
     let dataset = [];
+    let currentAbort = null;
+
+    // 逾時版 fetch
+    async function fetchWithTimeout(url, ms = 10000, opts = {}) {
+      const ac = new AbortController();
+      const t = setTimeout(() => ac.abort(), ms);
+      try {
+        const res = await fetch(url, { ...opts, signal: ac.signal, cache:'no-store' });
+        return res;
+      } finally {
+        clearTimeout(t);
+      }
+    }
+
+    // 簡易 CSV 解析（無多行欄位）
+    function csvToRows(csv) {
+      return csv.trim().split(/\r?\n/).map(line =>
+        line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(s => s.replace(/^"|"$/g,''))
+      );
+    }
 
     const showLoading = on => $loading.classList.toggle('show', !!on);
+    const showBoot = on => $boot.classList.toggle('show', !!on);
     const showEmptyBelow = on => $emptyBelow.classList.toggle('show', !!on);
     const norm = s => String(s || '').trim();
 
-    // 名次顯示：1~3 有獎牌，其餘只有數字
     function rankBadge(rank){
       const n = Number(rank);
       if (!n) return '';
@@ -120,131 +175,139 @@
       return `<span class="badge"><span>${n}</span></span>`;
     }
 
-    // 渲染表格；特例：尚未公布
     function render(list){
       $tbody.innerHTML = list.map(it => {
         const isPending = String(it[COL.name]) === '尚未公布';
         if (isPending){
-          return `
-            <tr>
-              <td class="rank"></td>
-              <td colspan="3" style="text-align:center;color:#0b3aa7;font-weight:600;">尚未公布</td>
-            </tr>
-          `;
+          return `<tr><td class="pending" colspan="3">尚未公布</td></tr>`;
         }
-        const score = (it[COL.score] === '' || it[COL.score] == null) ? '' : `<b>${it[COL.score]}</b>`;
         return `
           <tr>
-            <td class="rank">${rankBadge(it[COL.rank])}</td>
+            <td class="rank">${rankBadge(it[COL.ranking])}</td>
             <td>${it[COL.name] ?? ''}</td>
             <td class="group">${it[COL.group] ?? ''}</td>
-            <td class="score">${score}</td>
-          </tr>
-        `;
+          </tr>`;
       }).join('');
     }
 
     function apply(){
       const sel = $sheet.value;
-
       if (!sel){
         render([]);
         $emptyBelow.textContent = '請選擇組別';
         showEmptyBelow(true);
         return;
       }
-
-      if (dataset.length === 0){
-        render([]);
-        $emptyBelow.textContent = `${sel} 尚未公布`;
-        showEmptyBelow(true);
-        return;
-      }
-
-      if (dataset.length === 1 && String(dataset[0][COL.name]) === '尚未公布'){
-        render(dataset);
-        showEmptyBelow(false);
-        return;
-      }
-
-      // 後端已依規則（前3/前8）篩好，直接顯示
       render(dataset);
       showEmptyBelow(false);
     }
 
+    // 首次只抓清單
     async function loadAll(){
+      showBoot(true);
       try{
-        showLoading(true);
-        const url = `${SCRIPT_URL}?all=1&ts=${Date.now()}`;
-        const res = await fetch(url, {cache:'no-store'});
+        const res = await fetchWithTimeout(`${SCRIPT_URL}?meta=1&ts=${Date.now()}`, 10000);
         const data = await res.json();
 
-        const rows = Array.isArray(data) ? data : (data.rows || []);
-        allData = rows.map(r => ({
-          [COL.name]:  r[COL.name],
-          [COL.group]: norm(r[COL.group] ?? ''),
-          // 不把空值轉成 0，交給後端決定是否公布
-          [COL.score]: (r[COL.score] === '' || r[COL.score] == null) ? '' : r[COL.score],
-          [COL.rank]:  r[COL.rank]
-        }));
-
-        const names = (data.meta && Array.isArray(data.meta.sheets))
-          ? data.meta.sheets.map(s => s.name)
-          : Array.from(new Set(allData.map(x => x[COL.group]).filter(Boolean))).sort();
-
-        // 重建下拉
         for (let i=$sheet.options.length-1; i>=1; i--) $sheet.remove(i);
-        names.forEach(n=>{
+        (data.meta?.sheets || []).forEach(s=>{
           const opt = document.createElement('option');
-          opt.value = n; opt.textContent = n; $sheet.appendChild(opt);
+          opt.value = s.name; opt.textContent = s.name;
+          $sheet.appendChild(opt);
         });
 
         dataset = [];
         showEmptyBelow(true);
+        //if ($perf && data?.meta?.exec_ms != null) {
+          //$perf.textContent = `後端執行時間：${data.meta.exec_ms} ms`;
+        //}
       }catch(err){
-        alert('讀取資料失敗：' + (err.message||err));
+        alert('讀取清單失敗：' + (err.name === 'AbortError' ? '連線逾時' : (err.message||err)));
       }finally{
-        showLoading(false);
+        showBoot(false);
       }
     }
 
-    // 重新載入目前選擇的組別（即時）
+    // Apps Script 失敗 → 改抓 CSV 備援
+    async function fallbackCsv(sel){
+      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sel)}`;
+      const res = await fetchWithTimeout(url, 8000);
+      if (!res.ok) throw new Error('CSV 備援也失敗');
+      const csv = await res.text();
+      const rows2d = csvToRows(csv);
+      if (rows2d.length < 2) throw new Error('CSV 無資料');
+
+      const headers = rows2d[0];
+      const idxName = headers.indexOf('姓名');
+      const idxGroup = headers.indexOf('組別');
+      const idxRank  = headers.indexOf('名次');
+
+      const list = [];
+      for (let i=1;i<rows2d.length;i++){
+        const r = rows2d[i];
+        const rank = Number(r[idxRank]);
+        if (!Number.isFinite(rank) || rank < 1) continue;
+        list.push({
+          '姓名': r[idxName],
+          '組別': idxGroup >= 0 ? r[idxGroup] : sel,
+          '名次': rank
+        });
+      }
+      dataset = list.sort((a,b)=> a['名次'] - b['名次']);
+      apply();
+      alert('Apps Script 緩慢，已改用 CSV 備援。');
+    }
+
+    // 重新載入目前組別
     async function reloadCurrentGroup(){
       const sel = $sheet.value;
       if (!sel){ alert("請先選擇組別再重新載入"); return; }
+
+      if (currentAbort) currentAbort.abort();
+      currentAbort = new AbortController();
+
       showLoading(true);
       try{
-        const url = `${SCRIPT_URL}?sheet=${encodeURIComponent(sel)}&ts=${Date.now()}`;
-        const res = await fetch(url, {cache:'no-store'});
+        const res = await fetchWithTimeout(
+          `${SCRIPT_URL}?sheet=${encodeURIComponent(sel)}&ts=${Date.now()}`,
+          10000,
+          { signal: currentAbort.signal }
+        );
         const data = await res.json();
-
-        const rows = Array.isArray(data) ? data : (data.rows || []);
-        dataset = rows.map(r => ({
-          [COL.name]:  r[COL.name],
-          [COL.group]: norm(r[COL.group] ?? ''),
-          [COL.score]: (r[COL.score] === '' || r[COL.score] == null) ? '' : r[COL.score],
-          [COL.rank]:  r[COL.rank]
+        dataset = (data.rows||[]).map(r => ({
+          [COL.name]: r[COL.name],
+          [COL.group]: norm(r[COL.group]),
+          [COL.ranking]: r[COL.ranking]
         }));
-
+        //if ($perf && data?.meta?.exec_ms != null) {
+          //$perf.textContent = `後端執行時間：${data.meta.exec_ms} ms`;
+        //}
         apply();
       }catch(err){
-        alert("重新載入失敗：" + (err.message || err));
+        // 後端逾時/失敗 → CSV 備援
+        try {
+          await fallbackCsv(sel);
+        } catch (e2) {
+          alert("重新載入失敗（含備援）：" + (e2.message || e2));
+        }
       }finally{
         showLoading(false);
+        currentAbort = null;
       }
     }
 
     // 事件
     $sheet.addEventListener('change', ()=>{
-      const sel = $sheet.value;
-      dataset = sel ? allData.filter(it => norm(it[COL.group]) === norm(sel)) : [];
-      apply();
+      dataset = [];
+      render([]);
+      showEmptyBelow(false);
+      reloadCurrentGroup();
     });
     $btnClr.addEventListener('click', ()=>{ $sheet.value=''; dataset=[]; apply(); });
     $btnRel.addEventListener('click', reloadCurrentGroup);
 
-    // 初始化
-    loadAll();
+    // 啟動
+    window.addEventListener('DOMContentLoaded', loadAll);
   </script>
 </body>
 </html>
