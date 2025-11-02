@@ -5,38 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>比賽成績查詢</title>
   <style>
-    :root{
-      --bg:#f0f5ff; --card:#ffffff; --text:#0f172a; --muted:#64748b;
+    :root{ --bg:#f0f5ff; --card:#ffffff; --text:#0f172a; --muted:#64748b;
       --primary:#1d4ed8; --primary-weak:#dbeafe; --border:#e5e7eb;
-      --thead:#eff6ff; --radius:16px; --shadow:0 10px 24px rgba(2,6,23,.06);
-    }
+      --thead:#eff6ff; --radius:16px; --shadow:0 10px 24px rgba(2,6,23,.06); }
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:var(--text);
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Noto Sans TC,Arial,"Apple Color Emoji";}
     .container{max-width:980px;margin:28px auto;padding:0 16px}
     h1{font-size:26px;margin:0 0 16px;text-align:center;color:#0b3aa7}
-
     .card{background:var(--card);border:1px solid var(--border);
       border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;}
-
-    header.controls{display:grid;gap:12px;grid-template-columns: 1fr max-content max-content;align-items:end;margin-bottom:12px}
+    header.controls{display:grid;gap:12px;grid-template-columns:1fr max-content max-content;align-items:end;margin-bottom:12px}
     @media (max-width:720px){header.controls{grid-template-columns:1fr;}}
     label{font-size:13px;color:var(--muted)}
     select,button{width:100%;font-size:16px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:#fff}
     select:focus{outline:2px solid var(--primary-weak);border-color:var(--primary)}
     .btn{background:#eff6ff;color:#0b3aa7;border:1px solid #c7d2fe;cursor:pointer}
 
-    .table-wrap{
-      margin-top:4px;border:1px solid var(--border);border-radius:12px;
-      overflow:auto;background:#fff;box-shadow:var(--shadow);position:relative;
-      min-height:160px;
-    }
+    .table-wrap{margin-top:4px;border:1px solid var(--border);border-radius:12px;
+      overflow:auto;background:#fff;box-shadow:var(--shadow);position:relative;min-height:160px}
     table{width:100%;border-collapse:collapse;min-width:640px;table-layout:fixed}
-    thead th{
-      position:sticky;top:0;z-index:2;
-      background:var(--thead);color:#0b3aa7;font-weight:700;
-      border-bottom:1px solid #c7d2fe;padding:10px 12px;text-align:left
-    }
+    thead th{position:sticky;top:0;z-index:2;background:var(--thead);color:#0b3aa7;font-weight:700;
+      border-bottom:1px solid #c7d2fe;padding:10px 12px;text-align:left}
     tbody td{border-bottom:1px solid var(--border);padding:10px 12px;vertical-align:middle;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     tbody tr:nth-child(odd){background:#f8fbff}
     tbody tr:hover{background:#eef5ff}
@@ -52,11 +42,9 @@
     .rank-2{background:#e2e8f0;color:#334155;border-color:#cbd5e1}
     .rank-3{background:#fde68a;color:#7c2d12;border-color:#fcd34d}
 
-    .loading{
-      position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+    .loading{position:absolute;inset:0;display:none;align-items:center;justify-content:center;
       background:linear-gradient(180deg, rgba(239,246,255,.85), rgba(239,246,255,.6));
-      backdrop-filter:saturate(180%) blur(2px);border-radius:12px;z-index:3;
-    }
+      backdrop-filter:saturate(180%) blur(2px);border-radius:12px;z-index:3}
     .loading.show{display:flex}
     .spinner{width:42px;height:42px;border-radius:50%;border:4px solid #c7d2fe;border-top-color:#1d4ed8;animation:spin .9s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
@@ -65,22 +53,14 @@
     .empty-below.show{display:block}
     td.pending{ text-align:center;color:#0b3aa7;font-weight:600; }
 
-    /* 進站全螢幕載入 */
-    .boot-loading{
-      position:fixed;inset:0;display:none;align-items:center;justify-content:center;
-      background:rgba(240,245,255,.95);z-index:9999;
-    }
+    .boot-loading{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(240,245,255,.95);z-index:9999}
     .boot-loading.show{display:flex}
-    .boot-box{
-      display:flex;flex-direction:column;align-items:center;gap:14px;
-      padding:18px 22px;border-radius:14px;background:#fff;border:1px solid var(--border);box-shadow:var(--shadow);
-      color:#0b3aa7;font-weight:600
-    }
+    .boot-box{display:flex;flex-direction:column;align-items:center;gap:14px;
+      padding:18px 22px;border-radius:14px;background:#fff;border:1px solid var(--border);box-shadow:var(--shadow);color:#0b3aa7;font-weight:600}
     .boot-spinner{width:46px;height:46px;border-radius:50%;border:4px solid #c7d2fe;border-top-color:#1d4ed8;animation:spin .9s linear infinite}
   </style>
 </head>
 <body>
-  <!-- 全螢幕啟動載入層 -->
   <div id="bootLoading" class="boot-loading show" aria-live="polite" aria-busy="true">
     <div class="boot-box">
       <div class="boot-spinner"></div>
@@ -90,7 +70,6 @@
 
   <div class="container" aria-busy="false">
     <h1>比賽成績查詢</h1>
-
     <div class="card">
       <header class="controls">
         <div>
@@ -124,14 +103,13 @@
   </div>
 
   <script>
-    /* 後端與備援設定 */
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxP_yXeH9IRUOgi40tsNzW5Rzd70KAfGifg5dx3R0gYJuM8YLTieoq4zlkyrNCF3wEp/exec";
+    // ★ 換成你的 Apps Script Web App
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzgyh9E7B3DrnguXEkJs7zee9QUH4R1jx9Ynue3gUDNsGqWjy1CkxSF7Iz0LgqDGD60/exec";
+    // CSV 備援：同一份試算表
     const SHEET_ID  = "16djx-tUT59GxMjziCHYcBmON1JdOAkKERb1e2BqO9uY";
 
-    /* 欄位鍵名（需與後端一致） */
     const COL = { name:"姓名", group:"組別", teacher:"指導老師", score:"成績", ranking:"名次" };
 
-    /* DOM */
     const $sheet   = document.getElementById('sheetSelect');
     const $tbody   = document.querySelector('#tbl tbody');
     const $btnClr  = document.getElementById('btnClear');
@@ -143,30 +121,22 @@
     let dataset = [];
     let currentAbort = null;
 
-    /* 小工具 */
-    const showLoading   = on => $loading.classList.toggle('show', !!on);
-    const showBoot      = on => $boot.classList.toggle('show', !!on);
-    const showEmpty     = on => $empty.classList.toggle('show', !!on);
-    const norm          = s => String(s || '').trim();
+    const showLoading = on => $loading.classList.toggle('show', !!on);
+    const showBoot    = on => $boot.classList.toggle('show', !!on);
+    const showEmpty   = on => $empty.classList.toggle('show', !!on);
+    const norm        = s => String(s || '').trim();
 
     async function fetchWithTimeout(url, ms = 10000, opts = {}) {
       const ac = new AbortController();
       const t = setTimeout(() => ac.abort(), ms);
-      try {
-        const res = await fetch(url, { ...opts, signal: ac.signal, cache:'no-store' });
-        return res;
-      } finally {
-        clearTimeout(t);
-      }
+      try { return await fetch(url, { ...opts, signal: ac.signal, cache:'no-store' }); }
+      finally { clearTimeout(t); }
     }
-
     function csvToRows(csv) {
       return csv.trim().split(/\r?\n/).map(line =>
         line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(s => s.replace(/^"|"$/g,''))
       );
     }
-
-    /* 徽章 */
     function rankBadge(rank){
       const n = Number(rank);
       if (!n) return '';
@@ -177,12 +147,9 @@
       }
       return `<span class="badge"><span>${n}</span></span>`;
     }
-
-    /* 渲染（順序：名次→姓名→組別→指導老師→成績） */
     function render(list){
       $tbody.innerHTML = list.map(it => {
-        const isPending = String(it[COL.name]) === '尚未公布';
-        if (isPending){
+        if (String(it[COL.name]) === '尚未公布'){
           return `<tr><td class="pending" colspan="5">尚未公布</td></tr>`;
         }
         const teacher = norm(it[COL.teacher]) || '—';
@@ -197,7 +164,6 @@
           </tr>`;
       }).join('');
     }
-
     function apply(){
       const sel = $sheet.value;
       if (!sel){
@@ -210,20 +176,17 @@
       showEmpty(false);
     }
 
-    /* 首次只抓清單 */
     async function loadAll(){
       showBoot(true);
       try{
         const res = await fetchWithTimeout(`${SCRIPT_URL}?meta=1&ts=${Date.now()}`, 10000);
         const data = await res.json();
-
         for (let i=$sheet.options.length-1; i>=1; i--) $sheet.remove(i);
         (data.meta?.sheets || []).forEach(s=>{
           const opt = document.createElement('option');
           opt.value = s.name; opt.textContent = s.name;
           $sheet.appendChild(opt);
         });
-
         dataset = [];
         showEmpty(true);
       }catch(err){
@@ -233,7 +196,6 @@
       }
     }
 
-    /* 後端逾時時的 CSV 備援（會嘗試帶出老師與成績） */
     async function fallbackCsv(sel){
       const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sel)}`;
       const res = await fetchWithTimeout(url, 8000);
@@ -241,12 +203,12 @@
       const rows2d = csvToRows(await res.text());
       if (rows2d.length < 2) throw new Error('CSV 無資料');
 
-      const hdr = rows2d[0];
-      const ixName = hdr.indexOf('姓名');
-      const ixGroup= hdr.indexOf('組別');
-      const ixRank = hdr.indexOf('名次');
-      const ixTch  = hdr.indexOf('指導老師');
-      const ixSco  = hdr.indexOf('成績');
+      const hdr   = rows2d[0];
+      const ixName= hdr.indexOf('姓名');
+      const ixGroup=hdr.indexOf('組別');
+      const ixRank= hdr.indexOf('名次');
+      const ixTch = hdr.indexOf('指導老師');
+      const ixSco = hdr.indexOf('成績');
 
       const list = [];
       for (let i=1;i<rows2d.length;i++){
@@ -266,11 +228,9 @@
       alert('Apps Script 緩慢，已改用 CSV 備援。');
     }
 
-    /* 依選取組別重新載入 */
     async function reloadCurrentGroup(){
       const sel = $sheet.value;
       if (!sel){ alert("請先選擇組別再重新載入"); return; }
-
       if (currentAbort) currentAbort.abort();
       currentAbort = new AbortController();
 
@@ -299,7 +259,6 @@
       }
     }
 
-    /* 事件 */
     $sheet.addEventListener('change', ()=>{
       dataset = [];
       render([]);
@@ -309,7 +268,6 @@
     $btnClr.addEventListener('click', ()=>{ $sheet.value=''; dataset=[]; apply(); });
     $btnRel.addEventListener('click', reloadCurrentGroup);
 
-    /* 啟動 */
     window.addEventListener('DOMContentLoaded', loadAll);
   </script>
 </body>
